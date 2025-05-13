@@ -31,6 +31,8 @@ void PuzzleField::fillFieldManual(){
     cout << "\nEnter cell values (-1 for blank), for each row:\n";
     for(int i=0; i<rows; i++){
         for(int j=0; j<cols; j++){
+            string prompt = "(" + to_string(i) + "," + to_string(j) + ") = ";
+            field[i][j].number = InputHelper::getIntInput(prompt, -1, 9);
         }
     }
     cout << "\nField:\n";
@@ -40,7 +42,7 @@ void PuzzleField::fillFieldAuto(){
     srand(time(0));
     for(int i=0; i<rows; i++){
         for(int j=0; j<cols; j++){
-            if(){
+            if(rand() % 10 < 7){
                 field[i][j].number = rand() % 9+1;
             } else{
                 field[i][j].number = -1;
@@ -50,7 +52,19 @@ void PuzzleField::fillFieldAuto(){
     cout << "\nField";
     print();
 }
-void PuzzleField::setBlackCellsManual(){}
+void PuzzleField::setBlackCellsManual(){
+    cout << "\nEmter coordinates(row col) of a cell you want to assign to black, -1 to stop:\n";
+    while(true){
+        int x = InputHelper::getIntInput("Row (-1 to stop): ", -1, rows-1);
+        if(x == -1){
+            break;
+        }
+
+        int y = InputHelper::getIntInput("Column: ", 0, cola-1);
+
+        field[x][y].state = BLACK;
+    }
+}
 void PuzzleField::solve(int x, int y){
     if(x==rows){
         return isNumberUnique();
