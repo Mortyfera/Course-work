@@ -30,10 +30,10 @@ class PuzzleField{
     void fillFieldAuto();
     void setBlackCellsManual();
     bool solve(int x=0, int y=0);
-    void print() const;
+    void print(std::ostream &stream = std::cout) const;
     bool areWhiteCellsConnected();
     bool inBounds(int x, int y) const;
     bool isNumberUnique();
-    void outputStep(int x, int y, bool was_assigned_to_black);
+    void outputStep(int x, int y, bool was_assigned_to_black, std::ostream &stream = std::cout);
 };
 #endif

@@ -13,3 +13,11 @@ void FileManager::writeToFile(const string &file_name, const string &content){
     fout << content;
     fout.close();
 }
+
+ofstream FileManager::openFile(const string &file_name){
+    ofstream fout(file_name);
+    if(!fout){
+        cerr << "Error opening a file " << file_name << " .\n";
+    }
+    return fout;
+}

@@ -106,20 +106,24 @@ void PuzzleField::solve(int x, int y){
     }
     return false;
 }
-void PuzzleField::print() const{
+void PuzzleField::print(ostream &stream) const{
     for(int i=0; i<rows; i++){
         for(int j=0; j<cols; j++){
             if(field[i][j].state = BLACK){
                 cout << "X ";
+                stream << "X ";
             }
             else if(field.[i][j].number != -1){
                 cout << field[i][j].number << " ";
+                stream << field[i][j].number << " ";
             }
             else{
                 cout << ". ";
+                stream << ". ";
             }
         }
         cout << "\n";
+        stream << "\n";
     }
 }
 bool PuzzleField::areWhiteCellsConnected(){
@@ -180,12 +184,14 @@ bool PuzzleField::isNumberUnique(){
     }
     return true;
 }
-void PuzzleField::outputStep(int x, int y, bool was_assigned_to_black){
+void PuzzleField::outputStep(int x, int y, bool was_assigned_to_black, ostream &stream){
     if(was_assigned_to_black){
         cout << "Cell (" << x << ", " << y << ") was assigned to black.\n";
+        stream << "Cell (" << x << ", " << y << ") was assigned to black.\n";
     }
     else{
         cout << "Cell (" << x << ", " << y << ") was assigned to white.\n";
+        stream << "Cell (" << x << ", " << y << ") was assigned to white.\n";
     }
-    print();
+    print(stream);
 }
