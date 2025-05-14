@@ -66,132 +66,82 @@ void PuzzleField::setBlackCellsManual(){
     }
 }
 void PuzzleField::solve(int x, int y){
-    if(x==rows){
-        return isNumberUnique();
-    }
+    int temporary_field[9][6];
 
-    int next_x = x, next_y = y+1;
-    if(next_y == cols){
-        next_y = 0;
-        next_x++;
-    }
-
-    if(field[x][y].number == -1){
-        return solve(next_x, next_y);
-    }
-
-    bool can_be_assigned_to_black = true;
-    int move_row[4] = {-1, 1, 0, 0};
-    int move_col[4] = {0, 0, -1, 1};
-
-    for(int i=0; i<4; i++){
-        int new_row = x + move_row[i];
-        int new_col = y + move_col[i];
-        if(inBounds(new_row, new_col) && field[new_row][new_col].state == BLACK){
-            can_be_assigned_to_black = false;
-        }
-    }
-
-    if(can_be_assigned_to_black){
-        field[x][y].state = BLACK;
-        outputStep(x, y, true);
-        if(areWhiteCellsConnected() && solve(net_x, next_y)){
-            return true;
-        }
-        field[x][y].state = WHITE;
-    }
-
-    if(solve(next_x, next_y)){
-        return true;
-    }
-    return false;
-}
-void PuzzleField::print(ostream &stream) const{
-    for(int i=0; i<rows; i++){
-        for(int j=0; j<cols; j++){
-            if(field[i][j].state = BLACK){
-                cout << "X ";
-                stream << "X ";
-            }
-            else if(field.[i][j].number != -1){
-                cout << field[i][j].number << " ";
-                stream << field[i][j].number << " ";
-            }
-            else{
-                cout << ". ";
-                stream << ". ";
-            }
-        }
-        cout << "\n";
-        stream << "\n";
-    }
-}
-bool PuzzleField::areWhiteCellsConnected(){
-    int move_roe[4] = {-1, 1, 0, 0};
-    int move_col[4] = {0, 0, -1, 1};
-
-    for(int x=0; x<rows; x++){
-        for(int y=0; y<cols; y++){
-            if(field[x][y].state = BLACK){
-                continue;
-            }
-
-            boll all_neighbors_black = true;
-
-            for(int d=0; d<4; d++){
-                int next_x = x + move_row[d];
-                it next_y = y + move_col[d];
-
-                if(inBounds(next_x, next_y) && field[next_x][next_y].state != BLACK){
-                    all_neighbors_black = false;
-                    break;
+    for(int id=1; id<10; id++){
+        int col = 0;
+        for(int i=0; i<7; i++){
+            for(int j=0; j<7; j++){
+                if(field[i][j].region == id){
+                    int row = id-1;
+                    temporary_field[row][col] = field[i][j].number;
+                    col++;
                 }
             }
-
-            if(all_neighbors_black){
-                return false;
-            }
         }
     }
-    return true;
-}
-bool PuzzleField::inBounds(int x, int y) const{
-    return x >= 0 && x < rows && y >= 0 && y < cols;
-}
-bool PuzzleField::isNumberUnique(){
-    int numbers[6];
-    int index = -1;
-    for(int region_id = 1; region_id <= MAX_REDION_ID; region_id++){
-        for(int i=0; i<rows; i++){
-            for(int j=0; j<cols; j++){
-                if(field[i][j].state != BLACK && field[i][j].region == region_id){
-                    int num = field[i][j].number;
-                    index += 1;
-                    if(num!= -1){
-                        numbers[index] = num;
+
+    for(int i=0; i<9; i++){
+        for(int j=0; j<6; j++){
+            for(int z=j+1; z<6; z++){
+                if(temporary_field[i][j] != -1){
+                    if(temporary_field[i][j] == temporary_field[i][z]){
+                        temporary_field[i][j] = 0;
                     }
                 }
             }
         }
-        for(index = 0; index < 6; index++){
-            for(int i = index+1; i<6; i++){
-                if(numbers[index] == numbers[i]){
-                    return false;
+    }
+
+    for(int id=1; id<10; id++){
+        int col = 0;
+        for(int i=0; i<7; i++){
+            for(int j=0; j<7; j++){
+                if(field[i][j].region == id){
+                    int row = id-1;
+                    if(temporary_field[row][col] == 0){
+                        field[i][j].state == BLACK;
+                        cout << "Cell (" << i << "," << j << ") is assigned to black.\n";
+                        stream << "Cell (" << i << "," << j << ") is assigned to black.\n";
+                    }
+                    col++;
                 }
             }
         }
-        index = -1;
     }
-    return true;
-}
-void PuzzleField::outputStep(int x, int y, bool was_assigned_to_black, ostream &stream){
-    if(was_assigned_to_black){
-        cout << "Cell (" << x << ", " << y << ") was assigned to black.\n";
-        stream << "Cell (" << x << ", " << y << ") was assigned to black.\n";
+
+    for (int id=1; id<=9; id++) {
+        for (int i=0; i<7; i++) {
+            for (int j=0; j<7; j++) {
+                if (field[i][j].region == id && field[i][j].state == BLACK) {
+                    int move_row[] = {-1, 1, 0, 0};
+                    int move_col[] = {0, 0, -1, 1};
+                    
+                    for (int d = 0; d < 4; d++) {
+                        int new_i = i + move_row[d];
+                        int new_j = j + move_col[d];
+                        
+                        if (new_i >= 0 && new_i < 7 && new_j >= 0 && new_j < 7 && field[new_i][new_j].region == id && field[new_i][new_j].state == BLACK){
+                            field[new_i][new_j].state = WHITE;
+                            cout << "Cell (" << new_i << "," << new_j << ") is assigned to white.\n";
+                            stream << "Cell (" << new_i << "," << new_j << ") is assigned to white.\n";
+                            int target_number = field[new_i][new_j].number;
+                            bool replaced = false;
+                            
+                            for (int x=0; x<7 && !replaced; x++) {
+                                for (int y=0; y<7 && !replaced; y++) {
+                                    if (field[x][y].region == id && field[x][y].state != BLACK && field[x][y].number == targetNumber && !(x == new_i && y == new_j)) {
+                                        field[x][y].state = BLACK;
+                                        cout << "Cell (" << x << "," << y << ") is assigned to black.\n";
+                                        stream << "Cell (" << x << "," << y << ") is assigned to black.\n";
+                                        replaced = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-    else{
-        cout << "Cell (" << x << ", " << y << ") was assigned to white.\n";
-        stream << "Cell (" << x << ", " << y << ") was assigned to white.\n";
-    }
-    print(stream);
 }
