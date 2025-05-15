@@ -1,15 +1,15 @@
 #include "PuzzleField.h"
+#include "InputHelper.h"
 #include <iostream>
 
 using namespace std;
 
 PuzzleField::PuzzleField(){
-    rows = cols = 7;
     resetField();
 }
 
 void PuzzleField::resetField(){
-    int template_regions[7][7] = {
+    int template_regions[ROWS][COLS] = {
         {1, 1, 1, 2, 3, 3, 3},
         {1, 1, 4, 2, 2, 3, 3},
         {1, 4, 4, 2, 2, 2, 3},
@@ -19,8 +19,8 @@ void PuzzleField::resetField(){
         {7, 7, 7, 8, 9, 9, 9}
     };
 
-    for(int i=0; i<rows; i++){
-        for(int j=0; j<cols; j++){
+    for(int i=0; i<ROWS; i++){
+        for(int j=0; j<COLS; j++){
             field[i][j].number = -1;
             field[i][j].state = WHITE;
             field[i][j].region = template_regions[i][j];
@@ -29,19 +29,17 @@ void PuzzleField::resetField(){
 }
 void PuzzleField::fillFieldManual(){
     cout << "\nEnter cell values (-1 for blank), for each row:\n";
-    for(int i=0; i<rows; i++){
-        for(int j=0; j<cols; j++){
+    for(int i=0; i<ROWS; i++){
+        for(int j=0; j<COLS; j++){
             string prompt = "(" + to_string(i) + "," + to_string(j) + ") = ";
             field[i][j].number = InputHelper::getIntInput(prompt, -1, 9);
         }
     }
-    cout << "\nField:\n";
-    print();
 }
 void PuzzleField::fillFieldAuto(){
     srand(time(0));
-    for(int i=0; i<rows; i++){
-        for(int j=0; j<cols; j++){
+    for(int i=0; i<ROWS; i++){
+        for(int j=0; j<COLS; j++){
             if(rand() % 10 < 7){
                 field[i][j].number = rand() % 9+1;
             } else{
@@ -49,29 +47,43 @@ void PuzzleField::fillFieldAuto(){
             }
         }
     }
-    cout << "\nField";
-    print();
 }
-void PuzzleField::setBlackCellsManual(){
-    cout << "\nEmter coordinates(row col) of a cell you want to assign to black, -1 to stop:\n";
+void PuzzleField::setBlackCellsManual(ostream &stream){
+    cout << "\nEnter coordinates(row col, from 0 to 6) of a cell you want to assign to black/white, enter '-1' to stop(if you can't solve the puzzle enter '-2':\n";
+	stream << "\nEnter coordinates(row col, from 0 to 6) of a cell you want to assign to black/white, enter '-1' to stop(if you can't solve the puzzle enter '-2':\n";
     while(true){
-        int x = InputHelper::getIntInput("Row (-1 to stop): ", -1, rows-1);
+        int x = InputHelper::getIntInput("Row (-1 - to stop, -2 - can't find solution): ", -2, ROWS-1);
         if(x == -1){
             break;
         }
+		else if(x == -2){
+			cout << "\nPuzzle can't be solved.\n";
+			stream << "\nPuzzle can't be solved.\n";
+			return;
+		}
 
-        int y = InputHelper::getIntInput("Column: ", 0, cola-1);
-
-        field[x][y].state = BLACK;
+        int y = InputHelper::getIntInput("Column: ", 0, COLS-1);
+		
+		int choice = InputHelper::getCharInput("\nIf you want to assign cell to white enter 'w', if you want to assign cell to black enter 'b': ", 'w', 'b');
+		if(choice == 'b'){
+			field[x][y].state = BLACK;
+		}
+		else{
+			field[x][y].state = WHITE;
+		}
+		print(stream);
     }
+	cout << "\nPuzzle solved:\n";
+	stream << "\nPuzzle solved:\n";
+	print(stream);
 }
-void PuzzleField::solve(ostream &stream = cout){
-    int temporary_field[9][6];
+void PuzzleField::solve(ostream &stream){
+    int temporary_field[9][6];//9 regions, every region has 6 elements, exept for a region 5
 
     for(int id=1; id<10; id++){
         int col = 0;
-        for(int i=0; i<7; i++){
-            for(int j=0; j<7; j++){
+        for(int i=0; i<ROWS; i++){
+            for(int j=0; j<COLS; j++){
                 if(field[i][j].region == id){
                     int row = id-1;
                     temporary_field[row][col] = field[i][j].number;
@@ -95,14 +107,15 @@ void PuzzleField::solve(ostream &stream = cout){
 
     for(int id=1; id<10; id++){
         int col = 0;
-        for(int i=0; i<7; i++){
-            for(int j=0; j<7; j++){
+        for(int i=0; i<ROWS; i++){
+            for(int j=0; j<COLS; j++){
                 if(field[i][j].region == id){
                     int row = id-1;
                     if(temporary_field[row][col] == 0){
-                        field[i][j].state == BLACK;
+                        field[i][j].state = BLACK;
                         cout << "Cell (" << i << "," << j << ") is assigned to black.\n";
                         stream << "Cell (" << i << "," << j << ") is assigned to black.\n";
+						print(stream);
                     }
                     col++;
                 }
@@ -111,8 +124,8 @@ void PuzzleField::solve(ostream &stream = cout){
     }
 
     for (int id=1; id<=9; id++) {
-        for (int i=0; i<7; i++) {
-            for (int j=0; j<7; j++) {
+        for (int i=0; i<ROWS; i++) {
+            for (int j=0; j<COLS; j++) {
                 if (field[i][j].region == id && field[i][j].state == BLACK) {
                     int move_row[] = {-1, 1, 0, 0};
                     int move_col[] = {0, 0, -1, 1};
@@ -121,19 +134,21 @@ void PuzzleField::solve(ostream &stream = cout){
                         int new_i = i + move_row[d];
                         int new_j = j + move_col[d];
                         
-                        if (new_i >= 0 && new_i < 7 && new_j >= 0 && new_j < 7 && field[new_i][new_j].region == id && field[new_i][new_j].state == BLACK){
+                        if (new_i >= 0 && new_i < ROWS && new_j >= 0 && new_j < COLS && field[new_i][new_j].region == id && field[new_i][new_j].state == BLACK){
                             field[new_i][new_j].state = WHITE;
                             cout << "Cell (" << new_i << "," << new_j << ") is assigned to white.\n";
                             stream << "Cell (" << new_i << "," << new_j << ") is assigned to white.\n";
+							print(stream);
                             int target_number = field[new_i][new_j].number;
                             bool replaced = false;
                             
-                            for (int x=0; x<7 && !replaced; x++) {
-                                for (int y=0; y<7 && !replaced; y++) {
-                                    if (field[x][y].region == id && field[x][y].state != BLACK && field[x][y].number == targetNumber && !(x == new_i && y == new_j)) {
+                            for (int x=0; x<ROWS && !replaced; x++) {
+                                for (int y=0; y<COLS && !replaced; y++) {
+                                    if (field[x][y].region == id && field[x][y].state != BLACK && field[x][y].number == target_number && !(x == new_i && y == new_j)) {
                                         field[x][y].state = BLACK;
                                         cout << "Cell (" << x << "," << y << ") is assigned to black.\n";
                                         stream << "Cell (" << x << "," << y << ") is assigned to black.\n";
+										print(stream);
                                         replaced = true;
                                     }
                                 }
@@ -146,8 +161,8 @@ void PuzzleField::solve(ostream &stream = cout){
     }
 
     for (int id=1; id<=9; id++) {
-        for (int i=0; i<7; i++) {
-            for (int j=0; j<7; j++) {
+        for (int i=0; i<ROWS; i++) {
+            for (int j=0; j<COLS; j++) {
                 if (field[i][j].region == id && field[i][j].state == BLACK) {
                     int move_row[] = {-1, 1, 0, 0};
                     int move_col[] = {0, 0, -1, 1};
@@ -156,7 +171,7 @@ void PuzzleField::solve(ostream &stream = cout){
                         int new_i = i + move_row[d];
                         int new_j = j + move_col[d];
                         
-                        if (new_i >= 0 && new_i < 7 && new_j >= 0 && new_j < 7 && field[new_i][new_j].region == id && field[new_i][new_j].state == BLACK){
+                        if (new_i >= 0 && new_i < ROWS && new_j >= 0 && new_j < COLS && field[new_i][new_j].region == id && field[new_i][new_j].state == BLACK){
                             cout << "Puzzle can't be solved.\n";
                             stream << "Puzzle can't be solved.\n";
                             return;
@@ -173,8 +188,8 @@ void PuzzleField::solve(ostream &stream = cout){
 }
 
 void PuzzleField::print(ostream &stream) const {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
             if (field[i][j].state == BLACK){
 				cout << "X ";
 				stream << "X ";
@@ -188,7 +203,9 @@ void PuzzleField::print(ostream &stream) const {
 				stream << ". ";
 			}
         }
-        cout << endl;
-		stream << endl;
+        cout << "\n";
+		stream << "\n";
     }
+	cout << "\n\n";
+	stream << "\n\n";
 }

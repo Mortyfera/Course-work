@@ -4,16 +4,15 @@
 
 using namespace std;
 
-int InputHelper::getIntInput(const string &prompt, int min_val, int max_val){
+int InputHelper::getIntInput(const string &prompt, int min_value, int max_value){
     int value;
     while(true){
         cout << prompt;
         cin >> value;
 
-        if(cin.fail() || value < min_val || value > max_val){
-            cout << "Invalid input. Enter a number between " << min_value << " and " << max_val << ".\n";
-            cin.ignore();
-            cin.ignore(1000, '\n');
+        if(cin.fail() || value < min_value || value > max_value){
+            cout << "Invalid input. Try again.\n";
+			cin.ignore(1000, '\n');
         } else {
             return value;
         }
@@ -23,13 +22,13 @@ int InputHelper::getIntInput(const string &prompt, int min_val, int max_val){
 char InputHelper::getCharInput(const string &prompt, char option1, char option2){
     char input;
     while(true){
-        cout << prompt << " (" << option1 << "/" << option2 << "): ";
+        cout << prompt;
         cin >> input;
-        input = tlower(input);
+        input = tolower(input);
         if(input == option1 || input == option2){
             return input;
         } else {
-            cout << "Invalid choice. Try again.\n";
+            cout << "Invalid input. Try again.\n";
             cin.ignore(1000, '\n');
         }
     }

@@ -1,6 +1,8 @@
 #ifndef PUZZLE_FIELD_H
 #define PUZZLE_FIELD_H
 
+#include <iostream>
+
 const int ROWS = 7;
 const int COLS = 7;
 const int MAX_REGION_ID = 9;
@@ -19,8 +21,6 @@ struct Cell{
 class PuzzleField{
     private:
     Cell field[ROWS][COLS];
-    int rows;
-    int cols;
 
     public:
     PuzzleField();
@@ -28,8 +28,8 @@ class PuzzleField{
     void resetField();
     void fillFieldManual();
     void fillFieldAuto();
-    void setBlackCellsManual();
-    bool solve(std::ostream &stream = std::cout);
-    void print(std::ostream &stream = std::cout) const;
+    void setBlackCellsManual(std::ostream &stream);
+    void solve(std::ostream &stream);
+    void print(std::ostream &stream) const;
 };
 #endif
