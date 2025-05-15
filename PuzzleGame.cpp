@@ -41,14 +41,8 @@ void PuzzleGame::run(){
             stream << "\nField:\n";
             puzzle.print(stream);
         }
-
-        if(solve_mode == 2 && puzzle.solve()){
-            cout << "Solved:\n";
-            puzzle.print(stream);
-        }
-        else if(solve_mode == 2){
-            cout << "Can't solve a puzzle.\n";
-            stream << "Can't solve a puzzle.\n";
+        else{
+            puzzle.solve(stream);
         }
 
         char continuation = InputHelper::getCherInput("Do you want to solve another puzzle? (y/n): ", 'y', 'n');

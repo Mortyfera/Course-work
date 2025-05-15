@@ -29,11 +29,7 @@ class PuzzleField{
     void fillFieldManual();
     void fillFieldAuto();
     void setBlackCellsManual();
-    bool solve(int x=0, int y=0);
+    bool solve(std::ostream &stream = std::cout);
     void print(std::ostream &stream = std::cout) const;
-    bool areWhiteCellsConnected();
-    bool inBounds(int x, int y) const;
-    bool isNumberUnique();
-    void outputStep(int x, int y, bool was_assigned_to_black, std::ostream &stream = std::cout);
 };
 #endif

@@ -8,7 +8,7 @@ PuzzleField::PuzzleField(){
     resetField();
 }
 
-void PuzzleField::reserField(){
+void PuzzleField::resetField(){
     int template_regions[7][7] = {
         {1, 1, 1, 2, 3, 3, 3},
         {1, 1, 4, 2, 2, 3, 3},
@@ -65,7 +65,7 @@ void PuzzleField::setBlackCellsManual(){
         field[x][y].state = BLACK;
     }
 }
-void PuzzleField::solve(int x, int y){
+void PuzzleField::solve(ostream &stream = cout){
     int temporary_field[9][6];
 
     for(int id=1; id<10; id++){
@@ -143,5 +143,52 @@ void PuzzleField::solve(int x, int y){
                 }
             }
         }
+    }
+
+    for (int id=1; id<=9; id++) {
+        for (int i=0; i<7; i++) {
+            for (int j=0; j<7; j++) {
+                if (field[i][j].region == id && field[i][j].state == BLACK) {
+                    int move_row[] = {-1, 1, 0, 0};
+                    int move_col[] = {0, 0, -1, 1};
+                    
+                    for (int d = 0; d < 4; d++) {
+                        int new_i = i + move_row[d];
+                        int new_j = j + move_col[d];
+                        
+                        if (new_i >= 0 && new_i < 7 && new_j >= 0 && new_j < 7 && field[new_i][new_j].region == id && field[new_i][new_j].state == BLACK){
+                            cout << "Puzzle can't be solved.\n";
+                            stream << "Puzzle can't be solved.\n";
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    cout << "Puzzle solved:\n";
+    stream << "Puzzle solved:\n";
+    print(stream);
+}
+
+void PuzzleField::print(ostream &stream) const {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (field[i][j].state == BLACK){
+				cout << "X ";
+				stream << "X ";
+			}
+            else if (field[i][j].number != -1){
+				cout << field[i][j].number << " ";
+				stream << field[i][j].number << " ";
+			}
+            else{
+				cout << ". ";
+				stream << ". ";
+			}
+        }
+        cout << endl;
+		stream << endl;
     }
 }
