@@ -1,3 +1,14 @@
+/* ----------------------------------------------------------------<Header>-
+ Name: PuzzleGame.cc
+ Title: puzzle modified "Hitory" solver
+ Group: TV-43
+ Student: Olkhovska Y.I.
+ Written: 2025-05-17
+ Description: Write a program that solves modified puzzle "Hitory"
+ and writes it and gives user a chance to write and solve a puzzle themselves.
+ Synopsis: Creates a menu for user to interact with.
+ ------------------------------------------------------------------</Header>-*/
+
 #include "PuzzleGame.h"
 #include "InputHelper.h"
 #include "PuzzleField.h"
@@ -7,6 +18,10 @@
 
 using namespace std;
 
+/* ---------------------------------------------------------------------[<]-
+ Method: run()
+ Synopsis: Creates a menu for user to interact with.
+ ---------------------------------------------------------------------[>]-*/
 void PuzzleGame::run(){
     string file_name;
     cout << "Enter name of a file you want to write result of a program to (example.txt): ";
@@ -17,7 +32,8 @@ void PuzzleGame::run(){
         cerr << "Error: problem with a file.\n";
         return;
     }
-
+	
+	stream << "<--------------------->\n";
     stream << "Start of a new program.\n";
 	cout << "Rules:\nThe field is divided into 9 regions.\nYou need to color some cells black so that the numbers within each region do not repeat,\nand black cells within a region do not touch each other.\n'X' on the field means black cell, '.' on the field means empty cell.\n";
 	stream << "Rules:\nThe field is divided into 9 regions.\nYou need to color some cells black so that the numbers within each region do not repeat,\nand black cells within a region do not touch each other.\n'X' on the field means black cell, '.' on the field means empty cell.\n";
@@ -60,11 +76,14 @@ void PuzzleGame::run(){
         }
 
         if(solve_mode == 1){
-            puzzle.setBlackCellsManual(stream);
+            puzzle.setCellStateManual(stream);
         }
         else{
             puzzle.solve(stream);
         }
+		
+		cout <<"-------------------------------------------------------------------------------\n";
+		stream << "-------------------------------------------------------------------------------\n";
 
         char continuation = InputHelper::getCharInput("Do you want to solve another puzzle? (y/n): ", 'y', 'n');
         if(continuation == 'n'){
@@ -72,4 +91,5 @@ void PuzzleGame::run(){
         }
     }
 	stream << "End of a program.\n\n\n";
+	stream << "<--------------->\n";
 }

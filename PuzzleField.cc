@@ -1,3 +1,15 @@
+/* ----------------------------------------------------------------<Header>-
+ Name: PuzzleField.cc
+ Title: puzzle modified "Hitory" solver
+ Group: TV-43
+ Student: Olkhovska Y.I.
+ Written: 2025-05-17
+ Description: Write a program that solves modified puzzle "Hitory"
+ and writes it and gives user a chance to write and solve a puzzle themselves.
+ Synopsis: Is responsible for solving a puzzle automatically and through user,
+ filling in the field automatically and through user, and prints a field.
+ ------------------------------------------------------------------</Header>-*/
+
 #include "PuzzleField.h"
 #include "InputHelper.h"
 #include <iostream>
@@ -8,6 +20,10 @@ PuzzleField::PuzzleField(){
     resetField();
 }
 
+/* ---------------------------------------------------------------------[<]-
+ Method: resetField()
+ Synopsis: Resets states af all cells.
+ ---------------------------------------------------------------------[>]-*/
 void PuzzleField::resetField(){
     int template_regions[ROWS][COLS] = {
         {1, 1, 1, 2, 3, 3, 3},
@@ -27,6 +43,11 @@ void PuzzleField::resetField(){
         }
     }
 }
+
+/* ---------------------------------------------------------------------[<]-
+ Method: fillFieldManual()
+ Synopsis: Fills field with values user enters.
+ ---------------------------------------------------------------------[>]-*/
 void PuzzleField::fillFieldManual(){
     cout << "\nEnter cell values (-1 for blank), for each row:\n";
     for(int i=0; i<ROWS; i++){
@@ -36,6 +57,11 @@ void PuzzleField::fillFieldManual(){
         }
     }
 }
+
+/* ---------------------------------------------------------------------[<]-
+ Method: fillFieldAuto()
+ Synopsis: Fills field with random values.
+ ---------------------------------------------------------------------[>]-*/
 void PuzzleField::fillFieldAuto(){
     srand(time(0));
     for(int i=0; i<ROWS; i++){
@@ -48,7 +74,12 @@ void PuzzleField::fillFieldAuto(){
         }
     }
 }
-void PuzzleField::setBlackCellsManual(ostream &stream){
+
+/* ---------------------------------------------------------------------[<]-
+ Method: setCellStateManual(ostream &stream)
+ Synopsis: Allows user to set state of chosen cells.
+ ---------------------------------------------------------------------[>]-*/
+void PuzzleField::setCellStateManual(ostream &stream){
     cout << "\nEnter coordinates(row col, from 0 to 6) of a cell you want to assign to black/white, enter '-1' to stop(if you can't solve the puzzle enter '-2':\n";
 	stream << "\nEnter coordinates(row col, from 0 to 6) of a cell you want to assign to black/white, enter '-1' to stop(if you can't solve the puzzle enter '-2':\n";
     while(true){
@@ -77,8 +108,13 @@ void PuzzleField::setBlackCellsManual(ostream &stream){
 	stream << "\nPuzzle solved:\n";
 	print(stream);
 }
+
+/* ---------------------------------------------------------------------[<]-
+ Method: solve(ostream &stream)
+ Synopsis: Performs the algorithm that solves the puzzle.
+ ---------------------------------------------------------------------[>]-*/
 void PuzzleField::solve(ostream &stream){
-    int temporary_field[9][6];//9 regions, every region has 6 elements, exept for a region 5
+    int temporary_field[MAX_REGION_ID][6];//9 regions, every region has 6 elements, exept for a region 5
 
     for(int id=1; id<10; id++){
         int col = 0;
@@ -93,7 +129,7 @@ void PuzzleField::solve(ostream &stream){
         }
     }
 
-    for(int i=0; i<9; i++){
+    for(int i=0; i<MAX_REGION_ID; i++){
         for(int j=0; j<6; j++){
             for(int z=j+1; z<6; z++){
                 if(temporary_field[i][j] != -1){
@@ -123,7 +159,7 @@ void PuzzleField::solve(ostream &stream){
         }
     }
 
-    for (int id=1; id<=9; id++) {
+    for (int id=1; id<=MAX_REGION_ID; id++) {
         for (int i=0; i<ROWS; i++) {
             for (int j=0; j<COLS; j++) {
                 if (field[i][j].region == id && field[i][j].state == BLACK) {
@@ -160,7 +196,7 @@ void PuzzleField::solve(ostream &stream){
         }
     }
 
-    for (int id=1; id<=9; id++) {
+    for (int id=1; id<=MAX_REGION_ID; id++) {
         for (int i=0; i<ROWS; i++) {
             for (int j=0; j<COLS; j++) {
                 if (field[i][j].region == id && field[i][j].state == BLACK) {
@@ -187,7 +223,13 @@ void PuzzleField::solve(ostream &stream){
     print(stream);
 }
 
+/* ---------------------------------------------------------------------[<]-
+ Method: print(ostream &stream)
+ Synopsis: Prints a field.
+ ---------------------------------------------------------------------[>]-*/
 void PuzzleField::print(ostream &stream) const {
+	cout << "Field:\n";
+	stream << "Field:\n";
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             if (field[i][j].state == BLACK){
