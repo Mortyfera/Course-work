@@ -80,8 +80,8 @@ void PuzzleField::fillFieldAuto(){
  Synopsis: Allows user to set state of chosen cells.
  ---------------------------------------------------------------------[>]-*/
 void PuzzleField::setCellStateManual(ostream &stream){
-    cout << "\nEnter coordinates(row col, from 0 to 6) of a cell you want to assign to black/white, enter '-1' to stop(if you can't solve the puzzle enter '-2':\n";
-	stream << "\nEnter coordinates(row col, from 0 to 6) of a cell you want to assign to black/white, enter '-1' to stop(if you can't solve the puzzle enter '-2':\n";
+    cout << "\nEnter coordinates(row col, from 0 to 6) of a cell\nyou want to assign to black/white\nenter '-1' to stop\n(if you can't solve the puzzle enter '-2':\n";
+	stream << "\nEnter coordinates(row col, from 0 to 6) of a cell\nyou want to assign to black/white\nenter '-1' to stop\n(if you can't solve the puzzle enter '-2':\n";
     while(true){
         int x = InputHelper::getIntInput("Row (-1 - to stop, -2 - can't find solution): ", -2, ROWS-1);
         if(x == -1){
@@ -95,7 +95,7 @@ void PuzzleField::setCellStateManual(ostream &stream){
 
         int y = InputHelper::getIntInput("Column: ", 0, COLS-1);
 		
-		int choice = InputHelper::getCharInput("\nIf you want to assign cell to white enter 'w', if you want to assign cell to black enter 'b': ", 'w', 'b');
+		int choice = InputHelper::getCharInput("\nIf you want to assign cell to white enter 'w'\nif you want to assign cell to black enter 'b': ", 'w', 'b');
 		if(choice == 'b'){
 			field[x][y].state = BLACK;
 		}

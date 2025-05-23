@@ -24,7 +24,7 @@ using namespace std;
  ---------------------------------------------------------------------[>]-*/
 void PuzzleGame::run(){
     string file_name;
-    cout << "Enter name of a file you want to write result of a program to (example.txt): ";
+    cout << "Enter name of a file\nyou want to write result\nof a program to (example.txt): ";
     cin >> file_name;
     ofstream stream = FileManager::openFile(file_name);
     
@@ -35,8 +35,8 @@ void PuzzleGame::run(){
 	
 	stream << "<--------------------->\n";
     stream << "Start of a new program.\n";
-	cout << "Rules:\nThe field is divided into 9 regions.\nYou need to color some cells black so that the numbers within each region do not repeat,\nand black cells within a region do not touch each other.\n'X' on the field means black cell, '.' on the field means empty cell.\n";
-	stream << "Rules:\nThe field is divided into 9 regions.\nYou need to color some cells black so that the numbers within each region do not repeat,\nand black cells within a region do not touch each other.\n'X' on the field means black cell, '.' on the field means empty cell.\n";
+	cout << "Rules:\nThe field is divided into 9 regions.\nYou need to color some cells black\nso that the numbers within each region do not repeat,\nand black cells within a region do not touch each other.\n'X' on the field means black cell\n'.' on the field means empty cell.\n";
+	stream << "Rules:\nThe field is divided into 9 regions.\nYou need to color some cells black\nso that the numbers within each region do not repeat,\nand black cells within a region do not touch each other.\n'X' on the field means black cell\n'.' on the field means empty cell.\n";
 	cout << "Division of regions on the field:\n";
 	stream << "Division of regions on the field:\n";
 	int template_regions[7][7] = {
@@ -61,10 +61,10 @@ void PuzzleGame::run(){
 
         stream << "New puzzle.\n";
 
-        int fill_mode = InputHelper::getIntInput("Choose a way to fill in the field (1 - manually, 2 - automatically(randomly by a computer)): ", 1, 2);
-        stream << "Choose a way to fill in the field (1 - manually, 2 - automatically(randomly by a computer)): " << fill_mode << ".\n";
-        int solve_mode = InputHelper::getIntInput("Choose a way to solve a puzzle (1 - manually, 2 - automatically(by a program)): ", 1, 2);
-        stream << "Choose a way to solve a puzzle (1 - manually, 2 - automatically(by a program)): " << solve_mode << ".\n";
+        int fill_mode = InputHelper::getIntInput("Choose a way to fill in the field\n(1 - manually, 2 - automatically(randomly by a computer)): ", 1, 2);
+        stream << "Choose a way to fill in the field\n(1 - manually\n2 - automatically(randomly by a computer)): " << fill_mode << ".\n";
+        int solve_mode = InputHelper::getIntInput("Choose a way to solve a puzzle\n(1 - manually, 2 - automatically(by a program)): ", 1, 2);
+        stream << "Choose a way to solve a puzzle\n(1 - manually, 2 - automatically(by a program)): " << solve_mode << ".\n";
 
         if(fill_mode == 1){
             puzzle.fillFieldManual();
